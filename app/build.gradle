@@ -55,4 +55,5 @@ dependencies {
     implementation 'com.google.firebase:firebase-database'
 
     implementation 'com.nex3z:notification-badge:1.0.4'
+    implementation 'com.cepheuen.elegant-number-button:lib:1.0.2'
 }
