@@ -9,7 +9,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.andros.ecommerce.ICartLoadListener;
 import com.andros.ecommerce.models.Cart;
 import com.andros.ecommerce.models.Item;
 import com.andros.ecommerce.R;
@@ -27,12 +26,10 @@ import java.util.HashMap;
 
 public class ItemDetailsActivity extends AppCompatActivity {
     Item item;
-    int id;
     ImageView imageView;
     TextView title, category, price, description;
     ElegantNumberButton elegantNumberButton;
     Button addCartBtn;
-    ICartLoadListener iCartLoadListener;
 
     String INSTANCE_URL_DATABASE = "https://ecommerce-dee3d-default-rtdb.asia-southeast1.firebasedatabase.app";
 
@@ -99,13 +96,13 @@ public class ItemDetailsActivity extends AppCompatActivity {
                             userCart.child(String.valueOf(item.getId()))
                                     .updateChildren(updateCartMap)
                                     .addOnSuccessListener(v->{
-//                                        iCartLoadListener.onItemLoadFailed("Add To Cart");
-                                        showToast("Update Cart");
+                                        showToast("Added To Cart");
+
                                     })
                                     .addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
-//                                            iCartLoadListener.onItemLoadFailed(e.getMessage());
+                                            showToast(e.getMessage());
                                         }
                                     });
 
@@ -121,13 +118,12 @@ public class ItemDetailsActivity extends AppCompatActivity {
                             userCart.child(String.valueOf(item.getId()))
                                     .setValue(cart)
                                     .addOnSuccessListener(v->{
-//                                        iCartLoadListener.onItemLoadFailed("Add To Cart");
-                                        showToast("Add To Cart");
+                                        showToast("Added To Cart");
                                     })
                                     .addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
-//                                            iCartLoadListener.onItemLoadFailed(e.getMessage());
+                                            showToast(e.getMessage());
                                         }
                                     });
                         }
