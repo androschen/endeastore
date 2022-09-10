@@ -1,31 +1,32 @@
 package com.andros.ecommerce;
 
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
+
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.andros.ecommerce.activities.ItemDetailsActivity;
-import com.andros.ecommerce.activities.MainActivity;
+import com.andros.ecommerce.adapters.ItemAdapter;
+import com.andros.ecommerce.models.Cart;
 import com.andros.ecommerce.models.Item;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.nex3z.notificationbadge.NotificationBadge;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,11 +39,22 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomeFragment extends Fragment implements ItemAdapter.OnClickShowListener{
+public class HomeFragment extends Fragment implements ItemAdapter.OnClickShowListener {
     RecyclerView recyclerView;
-    List<Item> itemDataHolder;
+    List<Item> itemDataHolder = new ArrayList<>();
     ItemAdapter itemAdapter;
     SearchView searchBar;
+
+    FrameLayout btnCart;
+    NotificationBadge notificationBadge;
+
+    String INSTANCE_URL_DATABASE = "https://ecommerce-dee3d-default-rtdb.asia-southeast1.firebasedatabase.app";
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        countCartItem();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -51,39 +63,22 @@ public class HomeFragment extends Fragment implements ItemAdapter.OnClickShowLis
 
         recyclerView = v.findViewById(R.id.item_recycle_view);
         searchBar = v.findViewById(R.id.search_bar);
+        notificationBadge = v.findViewById(R.id.badge);
+        btnCart = v.findViewById(R.id.cart_button_frame);
 
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
         itemAdapter = new ItemAdapter(itemDataHolder,this);
-        getItem(v);
-        searchBar.clearFocus();
-        searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                return false;
-            }
 
-            @Override
-            public boolean onQueryTextChange(String s) {
-                filter(s);
-                return false;
-            }
+        btnCart.setOnClickListener(view ->{
+            Intent intent = new Intent(getActivity(),CartActivity.class);
+            startActivity(intent);
         });
 
+        getItem(v);
+
+        getFilteredItem();
+        countCartItem();
         return v;
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-        searchBar.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
-
     }
 
     private void getItem(View v){
@@ -94,7 +89,7 @@ public class HomeFragment extends Fragment implements ItemAdapter.OnClickShowLis
             public void onResponse(Call<List<Item>> call, Response<List<Item>> response) {
                 Log.d("TAG","RESPONSE");
                 if (response.isSuccessful() && response.body() != null) {
-                    List<Item> itemDataHolder = response.body();
+                    itemDataHolder = response.body();
 
                     itemAdapter.setData(itemDataHolder);
                     recyclerView.setAdapter(itemAdapter);
@@ -116,18 +111,19 @@ public class HomeFragment extends Fragment implements ItemAdapter.OnClickShowLis
         });
     }
 
-    public void getFilteredItem(View v){
+    public void getFilteredItem(){
         searchBar.clearFocus();
         searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
+                filter(s);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String s) {
                 filter(s);
-                return false;
+                return true;
             }
         });
     }
@@ -140,8 +136,7 @@ public class HomeFragment extends Fragment implements ItemAdapter.OnClickShowLis
                 filterList.add(item);
             }
         }
-        itemAdapter.setData(itemDataHolder);
-        recyclerView.setAdapter(itemAdapter);
+        itemAdapter.setData(filterList);
     }
 
     @Override
@@ -154,4 +149,36 @@ public class HomeFragment extends Fragment implements ItemAdapter.OnClickShowLis
         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
     }
 
+
+    public void onItemLoadSuccess(List<Cart> cartList) {
+        int cartSum=0;
+
+        for(Cart cart: cartList){
+            cartSum+=cart.getQuantity();
+        }
+        notificationBadge.setNumber(cartSum);
+    }
+
+    private void countCartItem(){
+        List<Cart> carts = new ArrayList<>();
+
+        FirebaseDatabase.getInstance(INSTANCE_URL_DATABASE).getReference("Cart")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for(DataSnapshot cartSnapshot: snapshot.getChildren()){
+                            Cart cart = cartSnapshot.getValue(Cart.class);
+                            cart.setId(Integer.parseInt(cartSnapshot.getKey()));
+                            carts.add(cart);
+                        }
+                        onItemLoadSuccess(carts);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        showToast(error.getMessage());
+                    }
+                });
+    }
 }
