@@ -10,7 +10,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.media.metrics.Event;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.andros.ecommerce.adapters.CartAdapter;
 import com.andros.ecommerce.models.Cart;
@@ -30,6 +32,8 @@ import java.util.List;
 public class CartActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     ImageView buttonBack;
+    TextView totalPrice;
+    Button checkout;
 
     String INSTANCE_URL_DATABASE = "https://ecommerce-dee3d-default-rtdb.asia-southeast1.firebasedatabase.app";
 
@@ -60,6 +64,8 @@ public class CartActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.cart_recycle_view);
         buttonBack = findViewById(R.id.button_back);
+        totalPrice = findViewById(R.id.total_price);
+        checkout = findViewById(R.id.checkout);
 
         LinearLayoutManager linearLayout = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayout);
@@ -105,6 +111,7 @@ public class CartActivity extends AppCompatActivity {
             sum+=cart.getTotalPrice();
         }
         CartAdapter cartAdapter = new CartAdapter(cartList,this);
+        totalPrice.setText("$"+String.valueOf(sum));
         recyclerView.setAdapter(cartAdapter);
 
     }
