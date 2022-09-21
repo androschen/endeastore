@@ -1,16 +1,32 @@
 package com.andros.ecommerce.models;
 
 public class User {
-    public String name, email, password;
+    public String images,name, email, password;
 
     public User(){
 
     }
 
-    public User(String name, String email, String password){
-        this.name=name;
-        this.email=email;
-        this.password=password;
+    public User(String name, String email, String password) {
+        this.images=null;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+    }
+
+    public User(String name, String email, String password,String images) {
+        this.images = images;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+    }
+
+    public String getImages() {
+        return images;
+    }
+
+    public void setImages(String images) {
+        this.images = images;
     }
 
     public String getName() {
