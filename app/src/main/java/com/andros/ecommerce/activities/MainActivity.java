@@ -11,8 +11,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 
-import com.andros.ecommerce.HomeFragment;
-import com.andros.ecommerce.ProfileFragment;
+import com.andros.ecommerce.fragments.HomeFragment;
+import com.andros.ecommerce.fragments.ProfileFragment;
 import com.andros.ecommerce.databinding.ActivityMainBinding;
 
 import com.andros.ecommerce.R;

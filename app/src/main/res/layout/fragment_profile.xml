@@ -3,12 +3,139 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ProfileFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.ProfileFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/profile_info"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:background="@color/black"
+            android:padding="20dp">
+
+            <ImageView
+                android:id="@+id/profile_image"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/default_profile_image" />
+
+            <TextView
+                android:id="@+id/profile_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Name"
+                android:textSize="20sp"
+                android:textColor="@color/white"
+                android:layout_toRightOf="@+id/profile_image"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"/>
+
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-100dp"
+            android:padding="20dp">
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="125dp"
+                app:cardBackgroundColor="@color/black"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="10dp"
+                android:layout_margin="10dp"
+                android:layout_weight="1">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="10dp">
+
+                    <ImageView
+                        android:layout_marginTop="10dp"
+                        android:id="@+id/user_money_logo"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/ic_baseline_monetization_on_24"
+                        android:layout_centerHorizontal="true"/>
+
+                    <TextView
+                        android:id="@+id/money_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ePay"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
+                        android:layout_below="@+id/user_money_logo"
+                        android:layout_centerHorizontal="true"/>
+
+                    <TextView
+                        android:layout_marginTop="4dp"
+                        android:id="@+id/user_money"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="$0"
+                        android:textColor="@color/white"
+                        android:textSize="28sp"
+                        android:layout_below="@+id/money_name"
+                        android:layout_centerHorizontal="true"/>
+
+                </RelativeLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="125dp"
+                app:cardBackgroundColor="@color/black"
+                app:cardElevation="10dp"
+                app:cardCornerRadius="10dp"
+                android:layout_margin="10dp"
+                android:layout_weight="1">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="10dp">
+
+                    <ImageView
+                        android:id="@+id/order_list_logo"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/ic_baseline_library_books_24"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="12dp"/>
+
+                    <TextView
+                        android:id="@+id/user_order"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Order list"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
+                        android:layout_below="@+id/order_list_logo"
+                        android:layout_centerHorizontal="true"/>
+
+                </RelativeLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+            android:orientation="vertical">
+
+
+        </LinearLayout>
+    </LinearLayout>
 
 </FrameLayout>

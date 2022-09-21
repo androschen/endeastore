@@ -1,4 +1,4 @@
-package com.andros.ecommerce;
+package com.andros.ecommerce.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +17,9 @@ import android.widget.FrameLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.andros.ecommerce.activities.CartActivity;
+import com.andros.ecommerce.ItemClient;
+import com.andros.ecommerce.R;
 import com.andros.ecommerce.activities.ItemDetailsActivity;
 import com.andros.ecommerce.adapters.ItemAdapter;
 import com.andros.ecommerce.models.Cart;
@@ -70,7 +73,7 @@ public class HomeFragment extends Fragment implements ItemAdapter.OnClickShowLis
         itemAdapter = new ItemAdapter(itemDataHolder,this);
 
         btnCart.setOnClickListener(view ->{
-            Intent intent = new Intent(getActivity(),CartActivity.class);
+            Intent intent = new Intent(getActivity(), CartActivity.class);
             startActivity(intent);
         });
 
