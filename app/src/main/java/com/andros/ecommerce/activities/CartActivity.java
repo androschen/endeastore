@@ -1,4 +1,4 @@
-package com.andros.ecommerce;
+package com.andros.ecommerce.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +14,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.andros.ecommerce.R;
+import com.andros.ecommerce.UpdateCartEvent;
 import com.andros.ecommerce.adapters.CartAdapter;
 import com.andros.ecommerce.models.Cart;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,6 +28,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -111,7 +114,8 @@ public class CartActivity extends AppCompatActivity {
             sum+=cart.getTotalPrice();
         }
         CartAdapter cartAdapter = new CartAdapter(cartList,this);
-        totalPrice.setText("$"+String.valueOf(sum));
+        final DecimalFormat df = new DecimalFormat("0.00");
+        totalPrice.setText("$"+String.valueOf(df.format(sum)));
         recyclerView.setAdapter(cartAdapter);
 
     }
