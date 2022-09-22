@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.andros.ecommerce.R;
 import com.andros.ecommerce.UpdateCartEvent;
+import com.andros.ecommerce.activities.SettingActivity;
 import com.andros.ecommerce.models.Cart;
 import com.andros.ecommerce.models.User;
 import com.github.drjacky.imagepicker.ImagePicker;
@@ -45,7 +46,7 @@ import kotlin.jvm.internal.Intrinsics;
 
 
 public class ProfileFragment extends Fragment {
-    ImageView profileImage;
+    ImageView profileImage,settings;
     ActivityResultLauncher<Intent> launcher;
     TextView profileName;
 
@@ -59,36 +60,10 @@ public class ProfileFragment extends Fragment {
 
         profileImage = v.findViewById(R.id.profile_image);
         profileName = v.findViewById(R.id.profile_name);
+        settings = v.findViewById(R.id.settings_button);
 
         loadProfile();
-        launcher=
-                registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),(ActivityResult result)->{
-                    if(result.getResultCode()== Activity.RESULT_OK){
-                        Uri uri=result.getData().getData();
-                        setImageFirebase(uri);
-                    }else if(result.getResultCode()== ImagePicker.RESULT_ERROR){
-                        ImagePicker.Companion.getError(result.getData());
-                    }
-                });
-
-        profileImage.setOnClickListener(view->{
-            ImagePicker.Companion.with(getActivity())
-                    .crop()
-                    .cropOval()
-                    .maxResultSize(512,512,true)
-                    .provider(ImageProvider.BOTH) //Or bothCameraGallery()
-                    .createIntentFromDialog((Function1)(new Function1(){
-                        public Object invoke(Object var1){
-                            this.invoke((Intent)var1);
-                            return Unit.INSTANCE;
-                        }
-
-                        public final void invoke(@NotNull Intent it){
-                            Intrinsics.checkNotNullParameter(it,"it");
-                            launcher.launch(it);
-                        }
-                    }));
-        });
+        onClickButtonFunction();
 
 
         return v;
@@ -119,6 +94,41 @@ public class ProfileFragment extends Fragment {
                 });
     }
 
+    private void onClickButtonFunction(){
+        launcher=
+                registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),(ActivityResult result)->{
+                    if(result.getResultCode()== Activity.RESULT_OK){
+                        Uri uri=result.getData().getData();
+                        setImageFirebase(uri);
+                    }else if(result.getResultCode()== ImagePicker.RESULT_ERROR){
+                        ImagePicker.Companion.getError(result.getData());
+                    }
+                });
+
+        profileImage.setOnClickListener(view->{
+            ImagePicker.Companion.with(getActivity())
+                    .crop()
+                    .cropOval()
+                    .maxResultSize(512,512,true)
+                    .provider(ImageProvider.BOTH) //Or bothCameraGallery()
+                    .createIntentFromDialog((Function1)(new Function1(){
+                        public Object invoke(Object var1){
+                            this.invoke((Intent)var1);
+                            return Unit.INSTANCE;
+                        }
+
+                        public final void invoke(@NotNull Intent it){
+                            Intrinsics.checkNotNullParameter(it,"it");
+                            launcher.launch(it);
+                        }
+                    }));
+        });
+
+        settings.setOnClickListener(v->{
+            Intent intent = new Intent(getActivity(), SettingActivity.class);
+            startActivity(intent);
+        });
+    }
 
 
     private void setImageFirebase(Uri uri){
