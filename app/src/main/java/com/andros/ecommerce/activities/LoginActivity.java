@@ -26,6 +26,7 @@ public class LoginActivity extends AppCompatActivity {
     ProgressBar progressBar;
 
     FirebaseAuth mAuth;
+    long timePress=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +73,8 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class)
+                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     finish();
                 }else{
@@ -83,6 +85,18 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        Toast backToast = Toast.makeText(LoginActivity.this, "Double Press to exit", Toast.LENGTH_LONG);;
+        if(timePress+2000>System.currentTimeMillis()){
+            backToast.cancel();
+            super.onBackPressed();
+            return;
+        }else{
+            backToast.show();
+        }
+        timePress = System.currentTimeMillis();
+    }
 
     private void showToast(String message) {
         Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
