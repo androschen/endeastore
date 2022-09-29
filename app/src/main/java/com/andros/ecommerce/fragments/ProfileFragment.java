@@ -12,6 +12,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -24,11 +25,13 @@ import android.widget.Toast;
 
 import com.andros.ecommerce.R;
 import com.andros.ecommerce.UpdateCartEvent;
+import com.andros.ecommerce.activities.BalanceActivity;
 import com.andros.ecommerce.activities.SettingActivity;
 import com.andros.ecommerce.models.Cart;
 import com.andros.ecommerce.models.User;
 import com.github.drjacky.imagepicker.ImagePicker;
 import com.github.drjacky.imagepicker.constant.ImageProvider;
+import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -48,10 +51,17 @@ import kotlin.jvm.internal.Intrinsics;
 public class ProfileFragment extends Fragment {
     ImageView profileImage,settings;
     ActivityResultLauncher<Intent> launcher;
-    TextView profileName;
+    TextView profileName,userMoney;
+    MaterialCardView userBalance;
 
     String INSTANCE_URL_DATABASE = "https://ecommerce-dee3d-default-rtdb.asia-southeast1.firebasedatabase.app";
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadProfile();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,6 +71,13 @@ public class ProfileFragment extends Fragment {
         profileImage = v.findViewById(R.id.profile_image);
         profileName = v.findViewById(R.id.profile_name);
         settings = v.findViewById(R.id.settings_button);
+        userBalance = v.findViewById(R.id.user_balance);
+        userMoney = v.findViewById(R.id.user_money);
+
+        userBalance.setOnClickListener(view ->{
+            Intent intent = new Intent(getActivity(), BalanceActivity.class);
+            startActivity(intent);
+        });
 
         loadProfile();
         onClickButtonFunction();
@@ -81,6 +98,9 @@ public class ProfileFragment extends Fragment {
                             User user = snapshot.getValue(User.class);
                             String name = capsText(user.getName());
                             profileName.setText(name);
+                            if(user.getMoney()!=null){
+                                userMoney.setText(user.getMoney().toString());
+                            }
                             if(user.getImages()!=null){
                                 profileImage.setImageURI(Uri.parse(user.getImages()));
                             }

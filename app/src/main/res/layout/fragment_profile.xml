@@ -67,6 +67,7 @@
             android:padding="20dp">
 
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/user_balance"
                 android:layout_width="0dp"
                 android:layout_height="125dp"
                 app:cardBackgroundColor="@color/black"
@@ -92,11 +93,11 @@
                         android:id="@+id/money_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_below="@+id/user_money_logo"
+                        android:layout_centerHorizontal="true"
                         android:text="ePay"
                         android:textColor="@color/white"
-                        android:textSize="20sp"
-                        android:layout_below="@+id/user_money_logo"
-                        android:layout_centerHorizontal="true"/>
+                        android:textSize="20sp" />
 
                     <TextView
                         android:layout_marginTop="4dp"
